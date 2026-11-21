@@ -4,167 +4,86 @@ title: Privacy Policy — Aether
 
 # Privacy Policy
 
-Version 0.1.8 · last updated 2026-11-19 · contact [fenderisfine@gmail.com](mailto:fenderisfine@gmail.com)
+Updated November 21, 2026 · Application version 0.1.8
 
-This policy explains how the Aether browser extension, its local runtime, and the CLI and MCP interfaces handle your information.
+This policy covers the Aether browser extension, its companion runtime, and its command-line and MCP interfaces. Aether requires no Aether account. Conversations and files are stored on the machine running the runtime; tasks can send information to the services described below. Aether does not operate a conversation relay, sell user data, or use it for advertising or model training. The product includes no remote analytics or tracking service.
 
-## Overview
+## Information Aether handles
 
-Aether is local-first. It requires no account and operates no cloud service that collects user data. There is no analytics, telemetry, advertising or tracking in the extension or the runtime. Storage and execution primarily take place on this device. Tasks, enabled plugin hooks and the network features described below can contact external services.
+The browser stores preferences, pairing state, page associations and drafts. Attachments and selected text can be staged in browser storage and transferred to the runtime before a message is sent. Page titles, URLs and text selections support page references and quotation previews; recording captures actions only while recording is enabled. The current page's title and URL are included as a default message reference, which you can remove before sending.
 
-## What stays on this device
+The runtime stores conversations, responses, tool results, attachments, annotations, workspace files, generated files, presets, memories, skills, workflows, goals, plans and evidence. Depending on the pages and files you use, these materials may contain personal details, private communications, authentication information, or financial or health information. Token activity is calculated locally from saved model usage records. Diagnostic logs record status, timing, usage and errors, with credential-field filtering; tool records and error text can still contain sensitive information.
 
-- Conversations and their transcripts, attachments, annotations (the selected text, comment and number), agent presets, memories, skills, workflows, plans, evidence and workspace files live in a local data directory.
-- Browser connection state, pairing tokens and model provider settings — including the API keys you enter — are stored locally. An API key is only ever sent to the model endpoint you configured it for.
-- Generated files and code-execution artifacts are written to a per-session folder in that data directory.
-- Token activity is computed locally from retained model usage records. No activity data is sent to an analytics service.
-- Local diagnostic logs record status, timing, usage and filtered errors. Conversation and tool records may still contain page content, request parameters or other sensitive information.
+API keys and custom request headers are stored in local configuration files and used for requests to your configured model services. These files rely on operating-system access controls, not application-level encryption or a system keychain.
 
-## What is sent to model services
+## Services that receive information
 
-- When you start a task, the model provider you configured receives the request context: system instructions, tool definitions, the conversation and relevant memories, the bound workspace's name, description and instructions, the page reference carried by that message, and the files, page text, images, selections or comments the task reads. The composer adds the current page's title and URL as that default reference; you can remove it before sending. Context compaction also sends earlier records to the selected model.
-- Thinking models may return reasoning content. It is stored with the conversation and, when a request carries tools, sent back to the same provider as its API requires.
-- Page text and screenshots may contain personal or sensitive information. What is sent depends on the task you start and the model you selected.
-- A provider may cache inputs or retain requests under its own terms. A cache hit does not mean data stays local. Service addresses, proxies, custom headers and provider data policies depend on your configuration.
-- We do not operate a relay, proxy or collection service between you and your provider. Your provider processes that data under its own terms and privacy policy.
-- You can switch models, remove a provider or stop a task at any time. Stopping a task requests cancellation of further work; it cannot recall data already sent to a third party.
+- **Model services:** your configured provider receives instructions, tool definitions, conversation context, relevant memories and workspace information, and the page text, screenshots, files, quotations or results used in a task. Summarizing older context also sends that material to the provider. Returned reasoning may be stored and sent back as required by its API. Retention, caching and training practices depend on that provider and your settings.
+- **Search and websites:** queries go to the search services used, including Bing, Baidu, 360, DuckDuckGo, arXiv, Wikipedia, Stack Exchange and GitHub. Browser requests may use your existing website login. Network inspection can read request and response bodies; filtering credential headers does not remove sensitive content from those bodies.
+- **Images and downloads:** site icons and expanded source previews can contact external servers. Remote Markdown images load after you click their loading control. Model catalogs, connection checks and installer or update downloads contact the configured provider, GitHub or update endpoint. Network-enabled code may contact other services or package registries. When verifying a proxy's synthetic DNS address, the runtime may send the destination hostname to Cloudflare or Google DNS.
 
-## Search, updates and other network requests
+These services receive ordinary connection information, including IP addresses and requested URLs, and apply their own policies. If you contact support, we receive the message and materials you choose to send; public issue reports are visible to others.
 
-- Search queries go to the search providers actually used, such as Bing, Baidu, 360, DuckDuckGo or arXiv. Page reads and browser actions contact target sites; Markdown images contact their source only after you click to load that image; site icons and expanded source previews can also cause external requests.
-- The browser holds login sessions, and page requests may use existing cookies. Public HTTP fetches do not automatically use browser login sessions. Network capture and API tests can read request and response bodies; credential headers are filtered from displayed details, but bodies may still contain sensitive information.
-- Model catalog requests, connection tests, software updates and installer downloads contact the corresponding provider, GitHub or configured update address. Those third parties receive normal request data such as IP addresses, queries and paths under their own policies.
-- Workspace, skill and workflow retrieval runs inside the local runtime. Only content a task needs is sent with a model request.
+## Permissions and execution
 
-## Browser permissions and why they are requested
+Browser permissions provide the sidebar (`sidePanel`), local storage (`storage`, `unlimitedStorage`), page access (`activeTab`, `scripting`, website permissions), page actions and diagnostics (`debugger`), task tabs and navigation (`tabs`, `tabGroups`, `webNavigation`), runtime connection (`nativeMessaging`), site icons (`favicon`), downloads (`downloads`, optional `downloads.open`) and background parsing or image processing (`offscreen`). Page-reference, selection and navigation features can operate without a model request. Aether does not request access to Chrome's browsing-history database.
 
-- `sidePanel` — shows the assistant interface in Chrome's side panel.
-- `storage` / `unlimitedStorage` — keeps settings, drafts and pairing state on this device; local data is not subject to a fixed storage quota.
-- `activeTab` — grants temporary access to the tab where you invoke the extension; page content is read only as part of a task. The composer's current-page reference contains only the tab title and URL and can be removed before sending.
-- `debugger` — performs clicks, form fills, scrolling and screenshots in the tab a task works on, reads page content, and captures or replays network requests for diagnostics and testing. A task or recording holds the connection while it needs it; idle task completion releases that ownership without closing the page. Cancelling Chrome's debugger prompt blocks further access until you explicitly reauthorize that page.
-- `tabs`, `tabGroups`, `webNavigation` — read tab titles and addresses, keep the tabs a task owns together, and recover page associations after navigation or restart.
-- `nativeMessaging` — starts and connects to the local runtime on this machine.
-- `favicon` — shows a site icon next to a page reference in the conversation.
-- `downloads` / `offscreen` — download files and installers, and run document parsing or image processing outside the visible page.
-- `scripting` and page access — mirrors your text selection into the panel, captures the steps of a recording you started, extracts the article text of the page you asked about, and turns a search result page into structured results. It is idle otherwise and keeps no state between requests.
+The runtime normally connects locally with pairing authentication. If you configure a remote runtime, task data is transferred to and stored on that host; its operator and connection security matter. Authorized CLI and MCP clients use the same runtime tools and permissions.
 
-Aether declares host access for the pages it may read and act on. The content script runs on pages you visit, holds no state, sends nothing on its own, and acts only when you select text, while you record a workflow, or when the assistant reads a page you asked about. It never runs on Chrome's own pages (`chrome://`, the Web Store, other extensions).
+Code execution follows the selected permissions and available platform isolation. Restricted execution limits filesystem access; full access can permit broader host access. Network-enabled code can transmit data it can read. Importing a skill does not run its commands. Loading an enabled skill can activate supported command hooks: approval mode asks first, while full access uses the task's authorization. Hooks may receive prompts, tool inputs and results, errors or replies; their feedback can be stored and included in model context. Restricted hooks do not receive the transcript path. Full access can expose it and files containing credentials. Disabling a skill prevents later activation.
 
-## Local runtime, CLI and MCP
+## Your controls and retention
 
-The runtime, the command-line interface and the MCP server talk to the extension over a local WebSocket bound to the loopback address, authenticated by a one-time pairing secret that is only obtainable from this machine. That traffic never passes through our servers. Authorized local clients can invoke tools within their task scope; connect only clients you trust.
+You can stop tasks, remove page references or model providers, and manage saved conversations, files, memories, skills and workflows. Stopping or recalling a message cannot undo website changes or recall data already transmitted.
 
-## Code execution
+Saved content remains until deleted. Deleting a conversation removes its associated transcript, attachments, annotations, artifacts and evidence. Recalling messages does not delete their attachments or generated files. Deleting a workspace removes its files. Separate saved copies, exports, backups and third-party records remain; diagnostic logs rotate separately.
 
-When a task runs code, it runs locally inside an operating-system sandbox. By default the sandbox can write only inside that task's workspace, cannot read credential stores or application data such as API keys and pairing secrets, and gets network access only as the call requests. Full access can permit host file access beyond the workspace. Generated code, tool results and plugin feedback may be sent to your model provider when included in context; network-enabled code can also contact destinations chosen by that code.
+Updates preserve user data. Uninstalling the extension does not remove the runtime's data directory, and removing runtime program files does not erase that data. For complete removal, delete extension data, runtime data and any retained copies separately.
 
-## Plugin hooks
+## Updates and contact
 
-Importing or updating a skill package preserves its files without executing them. Loading an enabled skill can activate supported command hooks at task events. Full access permits these commands under the task's permissions. In approval mode, a command must first be approved; the same session reuses approval only for the same source revision, command, working directory and permission mode.
-
-Hooks can receive the submitted prompt, tool arguments, tool results, errors and final response, depending on the event. Their feedback can be stored locally and sent to the selected model. In restricted mode they can read the package snapshot and use the task's working directory; the raw transcript path is withheld. Full access can expose that path and permit broader host access. The runtime does not pass provider credentials through the hook environment, but full access is not a guarantee that host files containing credentials are inaccessible. Hooks may make network requests under the execution permissions, so install and activate packages whose code and data handling you trust. Stopping a task cancels pending work but cannot undo completed writes or recall transmitted data. Disabling or deleting a skill prevents its later activation; unsupported plugin components are reported rather than silently executed.
-
-## Sharing
-
-We do not sell, rent or share your data, and we have no server that receives it. The third parties that see data are the model provider you choose and the search, website and update endpoints a task contacts, each only for requests you trigger.
-
-## Retention and deletion
-
-- Deleting a conversation removes its transcript, attachments, annotations, sandbox artifacts and evidence from the local data directory.
-- Deleting a workspace removes its files and text sources, and cannot be undone.
-- Uninstalling the extension removes browser-side extension data but does not automatically delete the local runtime data directory. Removing program files and deleting user data are separate operations; updates retain user data. To remove everything, clear extension data, runtime data and any copies you saved.
-
-## Acceptable use
-
-Aether is intended for lawful personal, commercial and production use, such as browsing, research and workflow automation. It must not be used for unlawful activity, infringement of the rights of others, bypassing access controls or security mechanisms, fraud, or distributing unlawful or harmful content. You must have lawful authority over the pages, data and accounts you process; responsibility for your use rests with you.
-
-## Changes and contact
-
-- This policy may change as the product evolves; material changes are surfaced in the application or in the release notes.
-- This policy applies to version 0.1.8, last updated 2026-11-19.
-- Questions about this policy, or requests about your data: [fenderisfine@gmail.com](mailto:fenderisfine@gmail.com). Do not include API keys, cookies, private conversation dumps or unredacted request bodies in reports.
-- Community support: [discord.gg/2TQQaKKWPD](https://discord.gg/2TQQaKKWPD).
+We update this policy when data handling changes. For privacy questions, contact [fenderisfine@gmail.com](mailto:fenderisfine@gmail.com). Please exclude API keys, cookies and private transcripts from reports.
 
 ---
 
 # 隐私政策
 
-版本 0.1.8 · 最后更新于 2026-11-19 · 联系 [fenderisfine@gmail.com](mailto:fenderisfine@gmail.com)
+更新日期：2026 年 11 月 21 日 · 适用应用版本：0.1.8
 
-本政策说明 Aether 浏览器扩展、本地运行时以及 CLI、MCP 接口如何处理你的信息。
+本政策适用于 Aether 浏览器扩展、配套运行时，以及命令行和 MCP 接口。使用 Aether 无需注册 Aether 账号。会话和文件保存在运行时所在设备上；任务可能向下述服务发送相关信息。Aether 不运营对话中转服务，不出售用户数据，也不将其用于广告或模型训练。产品未接入远程统计或跟踪服务。
 
-## 概述
+## Aether 处理的信息
 
-Aether 采用本地优先设计：不要求注册账号，也不运营收集用户数据的云端服务。扩展与运行时中没有任何分析、遥测、广告或跟踪。存储与执行以本机为主；任务、已激活的插件 Hook 和下述网络功能可能访问外部服务。
+浏览器保存偏好、配对状态、页面关联和草稿。附件与选中的文字可在发送消息前暂存于浏览器并传到运行时。页面标题、网址和选区用于网页引用与引用预览；操作录制仅在启用录制期间进行。输入框默认附带当前页的标题和网址，可在发送前移除。
 
-## 保存在本机的内容
+运行时保存会话、回复、工具结果、附件、注释、工作空间文件、生成文件、预设、记忆、技能、工作流、目标、计划和证据。根据你使用的页面和文件，这些材料可能包含个人信息、私人通信、身份验证信息，以及财务或健康信息。Token 活动根据保存的模型用量在本地计算。诊断日志记录状态、耗时、用量和错误，并过滤凭据字段；工具记录和错误文本仍可能含有敏感信息。
 
-- 对话与记录、附件、注释（所选原文、评论与编号）、Agent 预设、记忆、技能、工作流、计划、证据与工作空间文件，都保存在本机数据目录。
-- 浏览器连接状态、配对令牌与模型提供方设置（含你填写的 API 密钥）保存在本机；密钥只会发往你为它配置的那个模型服务。
-- 生成的文件与代码执行产物写入该数据目录中按会话划分的文件夹。
-- 本地诊断日志记录状态、耗时、用量和经过过滤的错误；会话与工具记录仍可能包含页面内容、请求参数或其他敏感信息。
+API 密钥和自定义请求头保存在本地配置文件中，用于请求你配置的模型服务。文件依赖操作系统的访问权限保护，未采用应用层加密或系统钥匙串存储。
 
-## 发送给模型服务的内容
+## 会接收信息的服务
 
-- 你发起任务后，你配置的模型服务会接收本轮请求上下文：系统指令、工具定义、对话及相关记忆、所绑定工作空间的名称、描述和项目指令、该消息携带的页面引用，以及任务读取到的文件内容、页面文本、图片、选择文本或评论。输入框默认把当前页的标题和网址作为第一条页面引用，可在发送前删除。上下文压缩同样会把较早记录发送给所选模型。
-- 思考模型可能返回思考内容；它会随会话保存在本机，并在请求携带工具时按接口要求回传给同一提供方。
-- 页面文本与截图可能包含个人信息或敏感信息，具体发送什么取决于你发起的任务与你选择的模型。
-- 模型提供方可能缓存输入或按其条款保留请求；缓存命中不代表数据只在本地处理。服务地址、代理、自定义请求头及提供方的数据政策由你的配置决定。
-- 我们不在你与模型服务之间运营中转、代理或收集服务；你的提供方按其自身条款与隐私政策处理这些数据。
-- 你可以随时切换模型、移除提供方或停止任务。停止任务会请求取消后续工作，但无法撤回已发送给第三方的数据。
+- **模型服务：** 你配置的提供方会收到指令、工具定义、会话上下文、相关记忆和工作空间信息，以及任务使用的页面文本、截图、文件、引用或结果。整理较早上下文时，也会将相应材料发送给提供方。模型返回的思考内容可能被保存，并按接口要求回传。数据保留、缓存和训练规则取决于该提供方及你的设置。
+- **搜索与网站：** 查询会发送给实际使用的搜索服务，包括 Bing、百度、360、DuckDuckGo、arXiv、Wikipedia、Stack Exchange 和 GitHub。浏览器请求可能使用已有网站登录态。网络检查可以读取请求和响应正文；过滤凭据头不代表正文中的敏感内容也被移除。
+- **图片与下载：** 网站图标和展开的来源预览可能访问外部服务器。远程 Markdown 图片在点击加载入口后获取。模型目录、连接检查、安装包和更新下载会访问配置的提供方、GitHub 或更新地址。允许联网的代码可能访问其他服务或软件包仓库；核验代理返回的合成 DNS 地址时，运行时可能向 Cloudflare 或 Google DNS 发送目标域名。
 
-## 搜索、更新与其他网络请求
+这些服务会收到 IP 地址、请求网址等正常连接信息，并适用各自的政策。联系支持时，我们会收到你主动发送的消息和材料；公开问题报告可被其他人查看。
 
-- 搜索查询会发送给实际使用的搜索提供方，例如 Bing、百度、360、DuckDuckGo 或 arXiv。网页读取与浏览器操作会访问目标网站；Markdown 图片仅在你点击对应加载入口后访问其来源；网站图标及展开的来源预览也可能产生外部请求。
-- 浏览器中的登录态由浏览器持有，页面请求可能使用现有 Cookie；公开 HTTP 抓取不自动携带浏览器登录态。网络捕获与接口测试可读取请求和响应正文，凭据头会在显示结果中过滤，但正文仍可能含有敏感信息。
-- 模型目录、连接测试、软件更新及安装包下载会连接对应提供方、GitHub 或配置的更新地址；这些第三方会获得正常请求所需的 IP、查询、路径等信息，并依其自身政策处理。
-- 工作空间文件、技能与工作流的检索在本地运行时内完成；只有任务需要的内容会随模型请求发送。
+## 权限与执行
 
-## 浏览器权限用途
+浏览器权限用于侧栏界面（`sidePanel`）、本地存储（`storage`、`unlimitedStorage`）、页面访问（`activeTab`、`scripting`、网站权限）、页面操作与诊断（`debugger`）、任务标签与导航（`tabs`、`tabGroups`、`webNavigation`）、运行时连接（`nativeMessaging`）、网站图标（`favicon`）、下载（`downloads`、可选 `downloads.open`）及离屏解析或图像处理（`offscreen`）。页面引用、选区和导航功能可以在没有模型请求时工作。Aether 不申请读取 Chrome 浏览历史数据库的权限。
 
-- `sidePanel`：在 Chrome 侧边栏展示助手界面。
-- `storage` / `unlimitedStorage`：在本机保存设置、草稿与配对状态；本地数据不受固定存储配额限制。
-- `activeTab`：在你主动调用扩展时临时访问当前标签页；页面内容只在任务需要时读取。输入框默认的当前页引用只包含标签页标题和网址，可在发送前删除。
-- `debugger`：在任务所在的标签页执行点击、填写、滚动与截图，读取页面内容，并为诊断与测试捕获或重放网络请求；任务或录制在需要时持有连接，任务空闲后释放自身占用且不关闭页面；取消 Chrome 调试后阻止后续访问，须明确重新授权该网页才恢复。
-- `tabs`、`tabGroups`、`webNavigation`：读取标签页标题与地址，把任务所属的标签页归组，并在导航或重启后恢复页面关联。
-- `nativeMessaging`：启动并连接本机运行时。
-- `favicon`：在对话中的页面引用旁显示站点图标。
-- `downloads` / `offscreen`：下载文件与安装包，在可见页面之外解析文档或处理图像。
-- `scripting` 与页面访问权限：把你选中的文本同步到侧栏、记录你主动开始录制的操作步骤、提取你要求读取的页面正文、把搜索结果页解析成结构化结果；其余时间保持空闲，请求之间不保留状态。
+运行时默认通过配对认证在本机连接。如果配置远程运行时，任务数据会传输并保存到该主机，须考虑主机管理方及连接安全。已授权的 CLI 和 MCP 客户端使用同一运行时的工具与权限。
 
-Aether 声明的是它可能读取与操作的页面访问权限。内容脚本在你访问的页面中运行，不保存状态、不会自行发送任何数据，只在三种情况下动作：你选中文本时、你正在录制工作流时、或助手读取你要求的那一页时。它不会在 Chrome 自身页面（`chrome://`、应用商店、其他扩展页）上运行。
+代码执行遵循所选权限和平台可用的隔离能力。受限执行限制文件访问；完全授权可能允许更广的宿主访问。允许联网的代码可以传输其能够读取的数据。导入技能不会执行命令；加载已启用技能后，可能激活受支持的命令 Hook：审批模式先确认，完全授权沿用任务授权。Hook 可能收到问题、工具参数与结果、错误或回复，其反馈可能保存在本机并进入模型上下文。受限 Hook 不获得原始会话文件路径；完全授权可能获得该路径并访问含凭据的文件。停用技能可阻止后续激活。
 
-## 本地运行时、CLI 与 MCP
+## 你的控制与数据保留
 
-运行时、命令行工具与 MCP 服务通过绑定在回环地址上的本地 WebSocket 与扩展通信，并使用只能从本机获取的一次性配对密钥认证；这些流量不经过我们的服务器。已授权的本机客户端可以在其任务范围内调用工具，请只连接可信客户端。
+你可以停止任务、移除页面引用或模型提供方，管理已保存的会话、文件、记忆、技能和工作流。停止任务或撤回消息，不能撤销已发生的网站修改，也不能收回已发送的数据。
 
-## 代码执行
+保存的内容保留至删除。删除会话会移除其记录、附件、注释、产物和证据。撤回消息不会删除附件或生成文件；删除工作空间会移除其中的文件。单独保存的副本、导出、备份和第三方记录仍会保留，诊断日志另行轮换。
 
-任务需要运行代码时，代码在本机操作系统沙箱内执行。默认情况下沙箱只能写入该任务的工作空间，无法读取凭据目录与应用数据（如 API 密钥、配对密钥），网络访问按调用请求决定。完全授权可能允许工作空间之外的宿主文件访问。生成代码、工具结果和插件反馈在进入上下文时可能发往模型提供方；获准联网的代码也可访问其指定的服务。
+更新保留用户数据。卸载扩展不会删除运行时数据目录，移除运行时程序也不等于删除数据。需要彻底移除时，请分别清理扩展数据、运行时数据及保留的副本。
 
-## 插件 Hook
+## 更新与联系
 
-导入或更新技能包只保存文件，不执行其中命令。任务加载已启用技能后，可在对应事件激活受支持的命令 Hook。完全授权沿用任务权限；需要审批时先确认命令，同一会话只对相同来源修订、命令、工作目录和权限模式复用批准。
-
-Hook 按事件可能收到用户问题、工具参数、工具结果、错误和最终回复；反馈可能保存在本机并发往所选模型。受限模式可读取包快照并使用任务工作目录，不提供原始会话文件路径；完全授权可提供该路径并允许更广的宿主访问。运行时不会通过 Hook 环境变量传入提供方凭据，但完全授权不保证含凭据的宿主文件不可读。Hook 可以在执行权限内联网，请只导入并激活你信任其代码和数据处理方式的包。停止任务会取消后续工作，不能撤销已完成写入或召回已发送数据；停用或删除技能会阻止后续激活，不支持的插件组件会明确报告。
-
-## 数据共享
-
-我们不出售、不出租、不共享你的数据，也没有接收这些数据的服务器。会接触到数据的第三方只有你选择的模型提供方，以及任务实际访问的搜索、网站与更新服务端点，且仅限于你触发或任务需要的请求。
-
-## 保留与删除
-
-- 删除会话会一并移除其记录、附件、注释、沙箱产物与证据数据。撤回消息仅移除对应对话记录，不删除附件或已生成文件；已交付产物的本机下载地址不按时间过期，删除所属会话后失效。
-- 删除工作空间会删除其中的项目文件与文本来源，且不可恢复。
-- 卸载扩展会移除浏览器侧的扩展数据，但不会自动删除本地运行时数据目录。移除程序文件与删除用户数据是两件事；程序更新保留用户数据。需要彻底移除时，请分别清理扩展数据、运行时数据和自行保存的副本。
-
-## 使用边界
-
-本产品面向合法合规的个人、商业及生产场景，用于浏览、资料整理与工作流自动化；不得用于违反法律法规、侵害他人权益、绕过访问控制或安全机制、实施欺诈、传播违法有害内容等用途。你应确保对处理的页面、数据与账号拥有合法权限，并对使用行为负责。
-
-## 政策更新与联系
-
-- 本政策可能随功能更新调整，重大变更会在应用内或版本说明中公布。
-- 适用版本 0.1.8，最后更新于 2026-11-19。
-- 如对本政策有疑问或需要处理你的数据，请发送邮件至 [fenderisfine@gmail.com](mailto:fenderisfine@gmail.com)。请勿在问题报告中附带 API 密钥、Cookie、完整私密会话或未脱敏的请求正文。
-- 社区支持与联系频道：[discord.gg/2TQQaKKWPD](https://discord.gg/2TQQaKKWPD)（应用内「设置 → 社区支持」直达）。
+数据处理方式变化时，我们会更新本政策。隐私问题请联系 [fenderisfine@gmail.com](mailto:fenderisfine@gmail.com)。请勿在报告中附带 API 密钥、Cookie 或私密会话。
