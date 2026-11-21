@@ -4,9 +4,11 @@ title: Privacy Policy — Aether
 
 # Privacy Policy
 
-Updated November 21, 2026 · Application version 0.1.8
+Updated November 21, 2026 · Application version 0.1.9
 
 This policy covers the Aether browser extension, its companion runtime, and its command-line and MCP interfaces. Aether requires no Aether account. Conversations and files are stored on the machine running the runtime; tasks can send information to the services described below. Aether does not operate a conversation relay, sell user data, or use it for advertising or model training. The product includes no remote analytics or tracking service.
+
+Aether’s use and transfer of information accessed through Chrome APIs adheres to the [Chrome Web Store User Data Policy](https://developer.chrome.com/docs/webstore/program-policies/user-data), including its Limited Use requirements.
 
 ## Information Aether handles
 
@@ -48,9 +50,11 @@ We update this policy when data handling changes. For privacy questions, contact
 
 # 隐私政策
 
-更新日期：2026 年 11 月 21 日 · 适用应用版本：0.1.8
+更新日期：2026 年 11 月 21 日 · 适用应用版本：0.1.9
 
 本政策适用于 Aether 浏览器扩展、配套运行时，以及命令行和 MCP 接口。使用 Aether 无需注册 Aether 账号。会话和文件保存在运行时所在设备上；任务可能向下述服务发送相关信息。Aether 不运营对话中转服务，不出售用户数据，也不将其用于广告或模型训练。产品未接入远程统计或跟踪服务。
+
+Aether 对通过 Chrome API 获取的信息的使用和转移遵守 [Chrome 网上应用店用户数据政策](https://developer.chrome.com/docs/webstore/program-policies/user-data)，包括其中的 Limited Use（限制使用）要求。
 
 ## Aether 处理的信息
 
